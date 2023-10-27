@@ -13,6 +13,7 @@ export async function POST(request: Request) {
 
   const body = await request.json();
 
+  // TODO: actually handle validation errors
   const validatedBody = createDocumentSchema.parse({
     ...body,
     userId: session.user.id,
