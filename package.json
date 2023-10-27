@@ -7,27 +7,32 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "db:migrate": "drizzle-kit generate:pg --schema=./src/database/schema.ts --out=./src/database/migrations"
+    "db:generate": "drizzle-kit generate:pg --schema=./src/database/schema --out=./src/database/migrations",
+    "db:migrate": "dotenv -- tsx ./src/database/migrate.ts"
   },
   "dependencies": {
     "@auth/drizzle-adapter": "^0.3.5",
     "drizzle-orm": "^0.28.6",
+    "drizzle-zod": "^0.5.1",
     "next": "14.0.0",
     "next-auth": "^5.0.0-beta.3",
     "postgres": "^3.4.2",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "autoprefixer": "^10",
+    "dotenv-cli": "^7.3.0",
     "drizzle-kit": "^0.19.13",
     "eslint": "^8",
     "eslint-config-next": "14.0.0",
     "postcss": "^8",
     "tailwindcss": "^3",
-    "typescript": "^5"
+    "tsx": "^3.14.0",
+    "typescript": "^5.2"
   }
 }
