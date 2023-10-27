@@ -1,7 +1,11 @@
-import Image from 'next/image'
+import { auth } from "@/configs/next-auth.config";
 
-export default function Home() {
+export default async function Home() {
+  const session = await auth();
+
   return (
-    <h1>Study buddy</h1>
-  )
+    <div className="container mx-auto my-5">
+      <h1 className="text-2xl">Welcome {session?.user?.name}</h1>
+    </div>
+  );
 }
