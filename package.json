@@ -6,11 +6,14 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "db:migrate": "drizzle-kit generate:pg --schema=./src/database/schema.ts --out=./src/database/migrations"
   },
   "dependencies": {
+    "@auth/drizzle-adapter": "^0.3.5",
     "drizzle-orm": "^0.28.6",
     "next": "14.0.0",
+    "next-auth": "^5.0.0-beta.3",
     "postgres": "^3.4.2",
     "react": "^18",
     "react-dom": "^18"
