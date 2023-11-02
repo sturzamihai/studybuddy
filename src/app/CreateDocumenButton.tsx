@@ -1,11 +1,12 @@
 "use client";
 
-import type { Document } from "@/database/schema/document";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 export default function CreateDocumentButton() {
+  const router = useRouter();
+
   const createDocument = async () => {
-    const newDocument = await fetch("/api/documents", {
+    await fetch("/api/documents", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -21,15 +22,11 @@ export default function CreateDocumentButton() {
           throw new Error(data.error);
         }
 
-        return data;
+        router.push(`/document/${data.id}`);
       })
       .catch((err) => {
         console.error(err);
       });
-
-
-      // TODO: not working ?
-      //redirect(`/documents/${newDocument.id}`);
   };
 
   return (

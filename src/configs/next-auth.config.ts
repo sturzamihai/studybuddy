@@ -11,7 +11,6 @@ const nextAuthConfig: NextAuthConfig = {
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
     }),
   ],
-  // insert the id in session
   callbacks: {
     session: async ({ session, user }) => {
       if (session?.user) {

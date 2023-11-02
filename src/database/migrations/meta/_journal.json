@@ -22,6 +22,20 @@
       "when": 1698445634446,
       "tag": "0002_lonely_kabuki",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1698959566074,
+      "tag": "0003_familiar_arclight",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1698960630669,
+      "tag": "0004_curved_green_goblin",
+      "breakpoints": true
     }
   ]
 }

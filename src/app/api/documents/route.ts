@@ -16,7 +16,7 @@ export async function POST(request: Request) {
   // TODO: actually handle validation errors
   const validatedBody = createDocumentSchema.parse({
     ...body,
-    userId: session.user.id,
+    authorId: session.user.id,
   });
   const newDocument = await documentService.createDocument(validatedBody);
 

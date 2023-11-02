@@ -7,22 +7,23 @@ import {
 } from "drizzle-orm/pg-core";
 import { users } from "./user";
 import { createInsertSchema } from "drizzle-zod";
+import { z } from "zod";
 
 export const documents = pgTable("document", {
   id: text("id").notNull().primaryKey(),
   title: text("title").notNull(),
   content: text("content").default(""),
-  createdAt: timestamp("createdAt", { mode: "date" }),
-  updatedAt: timestamp("updatedAt", { mode: "date" }),
-  userId: text("userId")
+  createdAt: timestamp("createdAt", { mode: "date" }).notNull(),
+  updatedAt: timestamp("updatedAt", { mode: "date" }).notNull(),
+  authorId: text("authorId")
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
 });
 
 export type Document = typeof documents.$inferSelect;
-export type CreateDocumentDto = {
-  id?: string;
-} & typeof documents.$inferInsert;
+export type CreateDocumentDto = Omit<typeof documents.$inferInsert, "id" | "createdAt" | "updatedAt">;
 export const createDocumentSchema = createInsertSchema(documents, {
-  id: (schema) => schema.id.optional(),
+  id: z.any(),
+  createdAt: z.any(),
+  updatedAt: z.any(),
 });
