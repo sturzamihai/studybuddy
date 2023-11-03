@@ -1,6 +1,5 @@
 import Editor from "@/components/Editor";
-import { Document } from "@/database/schema/document";
-import DocumentService from "@/services/document.service";
+import { getDocumentById } from "@/services/document.service";
 import { notFound } from "next/navigation";
 
 export default async function DocumentPage({
@@ -8,8 +7,7 @@ export default async function DocumentPage({
 }: {
   params: { id: string };
 }) {
-  const documentService = new DocumentService();
-  const document = await documentService.getDocument(params.id);
+  const document = await getDocumentById(params.id);
 
   if (!document) {
     notFound();

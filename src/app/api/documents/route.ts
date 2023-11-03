@@ -1,8 +1,6 @@
 import { auth } from "@/configs/next-auth.config";
 import { createDocumentSchema } from "@/database/schema/document";
-import DocumentService from "@/services/document.service";
-
-const documentService = new DocumentService();
+import { createDocument } from "@/services/document.service";
 
 export async function POST(request: Request) {
   const session = await auth();
@@ -18,7 +16,7 @@ export async function POST(request: Request) {
     ...body,
     authorId: session.user.id,
   });
-  const newDocument = await documentService.createDocument(validatedBody);
+  const newDocument = await createDocument(validatedBody);
 
   return Response.json(newDocument, { status: 200 });
 }
