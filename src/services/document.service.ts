@@ -2,6 +2,7 @@ import db from "@/database/client";
 import {
   CreateDocumentDto,
   Document,
+  UpdateDocumentDto,
   documents,
 } from "@/database/schema/document";
 import { eq } from "drizzle-orm";
@@ -45,4 +46,20 @@ export async function getDocumentsByAuthor(
     .where(eq(documents.authorId, authorId));
 
   return queryResult;
+}
+
+export async function updateDocument(
+  id: string,
+  document: UpdateDocumentDto
+): Promise<Document> {
+  const [updatedDocument] = await db
+    .update(documents)
+    .set({
+      ...document,
+      updatedAt: new Date(),
+    })
+    .where(eq(documents.id, id))
+    .returning();
+
+  return updatedDocument;
 }

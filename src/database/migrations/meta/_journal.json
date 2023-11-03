@@ -5,36 +5,8 @@
     {
       "idx": 0,
       "version": "5",
-      "when": 1698438877906,
-      "tag": "0000_third_owl",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "5",
-      "when": 1698441711241,
-      "tag": "0001_harsh_masque",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "5",
-      "when": 1698445634446,
-      "tag": "0002_lonely_kabuki",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "5",
-      "when": 1698959566074,
-      "tag": "0003_familiar_arclight",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "5",
-      "when": 1698960630669,
-      "tag": "0004_curved_green_goblin",
+      "when": 1699053812759,
+      "tag": "0000_youthful_callisto",
       "breakpoints": true
     }
   ]

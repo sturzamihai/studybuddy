@@ -1,6 +1,7 @@
 import { auth } from "@/configs/next-auth.config";
 import { createDocumentSchema } from "@/database/schema/document";
 import { createDocument } from "@/services/document.service";
+import formatError from "@/utils/formatError";
 
 export async function POST(request: Request) {
   const session = await auth();
@@ -10,13 +11,16 @@ export async function POST(request: Request) {
   }
 
   const body = await request.json();
-
-  // TODO: actually handle validation errors
-  const validatedBody = createDocumentSchema.parse({
+  const validatedBody = createDocumentSchema.safeParse({
     ...body,
     authorId: session.user.id,
   });
-  const newDocument = await createDocument(validatedBody);
 
-  return Response.json(newDocument, { status: 200 });
+  if (!validatedBody.success) {
+    return Response.json(formatError(validatedBody.error), { status: 400 });
+  } else {
+    const newDocument = await createDocument(validatedBody.data);
+
+    return Response.json(newDocument, { status: 200 });
+  }
 }
