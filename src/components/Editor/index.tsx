@@ -9,7 +9,7 @@ import {
 import StarterKit from "@tiptap/starter-kit";
 import { useDebouncedCallback } from "use-debounce";
 import Placeholder from "@tiptap/extension-placeholder";
-import "@/app/tiptap.css";
+import "@/styles/tiptap.css";
 import SlashCommands, { CommandItem } from "./extensions/slash-commands";
 import TaskItem from "@tiptap/extension-task-item";
 import TaskList from "@tiptap/extension-task-list";
