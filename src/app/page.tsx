@@ -25,7 +25,6 @@ export default async function Homepage() {
           <Link href={`/document/${document.id}`} key={idx}>
             <div className="p-4 border border-gray-300 rounded-md">
               <h2>{document.title}</h2>
-              <p>{document.content}</p>
             </div>
           </Link>
         ))}

@@ -1,11 +1,8 @@
 "use client"
 
 import Editor from "@/components/Editor";
-import { getDocumentById } from "@/services/document.service";
-import formatDate from "@/utils/formatDate";
 import useDocument from "@/utils/useDocument";
 import { Editor as EditorClass } from "@tiptap/react";
-import { not } from "drizzle-orm";
 import { notFound } from "next/navigation";
 
 export default function DocumentPage({
