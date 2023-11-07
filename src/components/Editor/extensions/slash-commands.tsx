@@ -1,11 +1,11 @@
 import { Editor, Extension, Range, ReactRenderer } from "@tiptap/react";
 import Suggestion from "@tiptap/suggestion";
-import { ReactNode } from "react";
+import { ReactNode, useCallback } from "react";
 import tippy from "tippy.js";
 
-type CommandItem = {
+export type CommandItem = {
   title: string;
-  description: string;
+  description?: string;
   icon: ReactNode;
   command: ({ editor, range }: CommandFunctionArgs) => void;
 };
@@ -17,21 +17,37 @@ type CommandFunctionArgs = {
 
 function CommandList({
   items,
-  command,
   editor,
   range,
 }: {
   items: CommandItem[];
-  command: any;
   editor: Editor;
   range: Range;
 }) {
+  const runCommand = useCallback(
+    (index: number) => {
+      const selectedItem = items[index];
+
+      if (selectedItem) {
+        selectedItem.command({ editor, range });
+      }
+    },
+    [editor, items, range]
+  );
+
   return items.length > 0 ? (
-    <div className="z-50 h-auto max-h-[300px] overflow-y-auto bg-white px-2 py-3 rounded-md">
+    <div className="z-50 h-auto max-h-[300px] flex flex-col gap-1 overflow-y-auto bg-white p-2 rounded-md border border-gray-100 shadow-lg">
       {items.map((item, idx) => (
-        <button key={idx} className="hover:bg-gray-100 rounded-md px-2 py-3">
-          <div>{item.title}</div>
-          <div>{item.description}</div>
+        <button
+          key={idx}
+          className="hover:bg-gray-100 w-full rounded-md px-2 py-3 flex text-left items-center gap-2"
+          onClick={() => runCommand(idx)}
+        >
+          {item.icon}
+          <div>
+            <p className="font-medium">{item.title}</p>
+            <p className="text-xs text-gray-500">{item.description}</p>
+          </div>
         </button>
       ))}
     </div>
@@ -83,17 +99,6 @@ const SlashCommands = Extension.create({
     return {
       suggestion: {
         char: "/",
-        command: ({
-          editor,
-          range,
-          item,
-        }: {
-          editor: Editor;
-          range: Range;
-          item: CommandItem;
-        }) => {
-          item.command({ editor, range });
-        },
         render: renderCommands,
       },
     };
