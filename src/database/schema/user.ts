@@ -6,6 +6,8 @@ import {
   integer,
 } from "drizzle-orm/pg-core";
 import type { AdapterAccount } from "@auth/core/adapters";
+import { documents } from "./document";
+import { relations } from "drizzle-orm";
 
 export const users = pgTable("user", {
   id: text("id").notNull().primaryKey(),
@@ -14,6 +16,8 @@ export const users = pgTable("user", {
   emailVerified: timestamp("emailVerified", { mode: "date" }),
   image: text("image"),
 });
+
+export type User = typeof users.$inferSelect;
 
 export const accounts = pgTable(
   "account",
@@ -56,3 +60,7 @@ export const verificationTokens = pgTable(
     compoundKey: primaryKey(vt.identifier, vt.token),
   })
 );
+
+export const usersRelation = relations(users, ({ one, many }) => ({
+  documents: many(documents),
+}));

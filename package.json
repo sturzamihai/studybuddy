@@ -1,5 +1,5 @@
 {
-  "name": "study-buddy",
+  "name": "studybuddy",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -7,27 +7,51 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "db:migrate": "drizzle-kit generate:pg --schema=./src/database/schema.ts --out=./src/database/migrations"
+    "db:generate": "drizzle-kit generate:pg --schema=./src/database/schema --out=./src/database/migrations",
+    "db:migrate": "dotenv -- tsx ./src/database/migrate.ts"
   },
   "dependencies": {
     "@auth/drizzle-adapter": "^0.3.5",
+    "@radix-ui/react-avatar": "^1.0.4",
+    "@tailwindcss/forms": "^0.5.6",
+    "@tailwindcss/typography": "^0.5.10",
+    "@tiptap/extension-horizontal-rule": "^2.1.12",
+    "@tiptap/extension-placeholder": "^2.1.12",
+    "@tiptap/extension-table": "^2.1.12",
+    "@tiptap/extension-table-cell": "^2.1.12",
+    "@tiptap/extension-table-header": "^2.1.12",
+    "@tiptap/extension-table-row": "^2.1.12",
+    "@tiptap/extension-task-item": "^2.1.12",
+    "@tiptap/extension-task-list": "^2.1.12",
+    "@tiptap/pm": "^2.1.12",
+    "@tiptap/react": "^2.1.12",
+    "@tiptap/starter-kit": "^2.1.12",
+    "@tiptap/suggestion": "^2.1.12",
+    "clsx": "^2.0.0",
     "drizzle-orm": "^0.28.6",
+    "drizzle-zod": "^0.5.1",
     "next": "14.0.0",
     "next-auth": "^5.0.0-beta.3",
     "postgres": "^3.4.2",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "tailwind-merge": "^2.0.0",
+    "tippy.js": "^6.3.7",
+    "use-debounce": "^9.0.4",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "autoprefixer": "^10",
+    "dotenv-cli": "^7.3.0",
     "drizzle-kit": "^0.19.13",
     "eslint": "^8",
     "eslint-config-next": "14.0.0",
     "postcss": "^8",
     "tailwindcss": "^3",
-    "typescript": "^5"
+    "tsx": "^3.14.0",
+    "typescript": "^5.2"
   }
 }
