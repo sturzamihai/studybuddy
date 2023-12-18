@@ -1,5 +1,6 @@
 "use client";
 
+import { Button } from "@/components/ui/Button";
 import { useRouter } from "next/navigation";
 
 export default function CreateDocumentButton() {
@@ -30,11 +31,10 @@ export default function CreateDocumentButton() {
   };
 
   return (
-    <button
+    <Button
       onClick={createDocument}
-      className="bg-gray-300 py-2 px-4 rounded-md"
     >
       Create new document
-    </button>
+    </Button>
   );
 }
