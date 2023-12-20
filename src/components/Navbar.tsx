@@ -1,6 +1,7 @@
 "use client";
 import * as Avatar from "@radix-ui/react-avatar";
 import { signIn, useSession } from "next-auth/react";
+import Link from "next/link";
 
 export default function Navbar() {
   const session = useSession();
@@ -8,18 +9,17 @@ export default function Navbar() {
   return (
     <nav className="bg-gray-100">
       <div className="container mx-auto flex items-center py-4 justify-between">
-        <h2 className="font-semibold">Study Buddy</h2>
-
+        <Link href="/">
+          <h2 className="font-semibold">Study Buddy</h2>
+        </Link>
         {session.status === "authenticated" ? (
           <Avatar.Root className="inline-flex h-[35px] w-[35px] select-none items-center justify-center overflow-hidden rounded-full align-middle">
             <Avatar.Image
-            className="h-full w-full object-cover rounded-[inherit]"
+              className="h-full w-full object-cover rounded-[inherit]"
               src={session.data.user?.image}
               alt={session.data.user?.name}
             />
-            <Avatar.Fallback
-              className="leading-1 flex h-full w-full items-center justify-center"
-            >
+            <Avatar.Fallback className="leading-1 flex h-full w-full items-center justify-center">
               {`${session.data.user?.name?.charAt(
                 0
               )}${session.data.user?.name?.charAt(1)}`}

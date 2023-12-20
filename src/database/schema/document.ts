@@ -10,6 +10,7 @@ import { users } from "./user";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 import { relations } from "drizzle-orm";
+import { folders } from "./folder";
 
 export const documents = pgTable("document", {
   id: text("id").notNull().primaryKey(),
@@ -20,6 +21,9 @@ export const documents = pgTable("document", {
   authorId: text("authorId")
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
+  folderId: text("folderId").references(() => folders.id, {
+    onDelete: "cascade",
+  }),
 });
 
 export type Document = typeof documents.$inferSelect;
@@ -41,10 +45,3 @@ export const createDocumentSchema = createInsertSchema(documents, {
   createdAt: z.any(),
   updatedAt: z.any(),
 });
-
-export const documentsRelation = relations(documents, ({ one }) => ({
-  author: one(users, {
-    fields: [documents.authorId],
-    references: [users.id],
-  }),
-}));

@@ -10,12 +10,18 @@ import {
 } from "@/components/ui/Dialog";
 import { Form, FormField, FormItem, FormMessage } from "@/components/ui/Form";
 import { Input } from "@/components/ui/Input";
+import { Folder } from "@/database/schema/folder";
 import { useForm } from "react-hook-form";
 
-export default function CreateFolderButton() {
+export default function CreateFolderButton({
+  folder = null,
+}: {
+  folder?: Folder | null;
+}) {
   const form = useForm({
     defaultValues: {
       name: "",
+      parentId: folder?.id || null,
     },
   });
 

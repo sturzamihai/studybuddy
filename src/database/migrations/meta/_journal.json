@@ -15,6 +15,13 @@
       "when": 1702915127828,
       "tag": "0001_nebulous_silvermane",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1703105068291,
+      "tag": "0002_married_black_knight",
+      "breakpoints": true
     }
   ]
 }
