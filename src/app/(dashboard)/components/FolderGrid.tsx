@@ -5,6 +5,7 @@ import {
 } from "@/services/folder.service";
 import { User } from "next-auth/types";
 import FolderCard from "./FolderCard";
+import CreateFolderButton from "./CreateFolderButton";
 
 export default async function FolderGrid({
   user,
@@ -31,6 +32,7 @@ export default async function FolderGrid({
         {folders.map((folder, idx) => (
           <FolderCard folder={folder} key={idx} />
         ))}
+        <CreateFolderButton folder={folder} />
       </div>
     </div>
   );

@@ -24,11 +24,7 @@ export default async function Homepage() {
   return (
     <main className="container mx-auto my-5">
       <h1 className="text-2xl">Welcome {user.name}</h1>
-      <div className="flex items-center gap-2">
-        <CreateDocumentButton />
-        <CreateFolderButton />
-      </div>
-      <div className="flex flex-col gap-2 my-4">
+      <div className="flex flex-col gap-6 my-4">
         <FolderGrid user={user} />
         <DocumentGrid user={user} />
       </div>
