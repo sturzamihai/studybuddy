@@ -4,8 +4,9 @@ import CreateDocumentButton from "../../components/CreateDocumenButton";
 import CreateFolderButton from "../../components/CreateFolderButton";
 import DocumentGrid from "../../components/DocumentGrid";
 import FolderGrid from "../../components/FolderGrid";
-import { getFolderById } from "@/services/folder.service";
+import { getFolderBreadcrumbs, getFolderById } from "@/services/folder.service";
 import { Metadata } from "next";
+import Breadcrumbs from "./components/Breadcrumbs";
 
 export async function generateMetadata({
   params,
@@ -41,9 +42,11 @@ export default async function FolderPage({
     notFound();
   }
 
+  const breadcrumbs = await getFolderBreadcrumbs(folder.id);
+
   return (
     <main className="container mx-auto my-5">
-      <div>Breadcrumbs</div>
+      <Breadcrumbs folders={breadcrumbs ?? [folder]} />
       <div className="flex flex-col gap-6 my-4">
         <FolderGrid user={user} folder={folder} />
         <DocumentGrid user={user} folder={folder} />

@@ -20,7 +20,8 @@ export default async function FolderGrid({
     return (
       <div>
         <h3 className="font-medium mb-2">Folders</h3>
-        <small>No folders found.</small>
+        <p className="mb-2">No folders found.</p>
+        <CreateFolderButton folder={folder} />
       </div>
     );
   }

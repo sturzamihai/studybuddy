@@ -54,3 +54,26 @@ export async function getSubfoldersByParent(
 
   return queryResult;
 }
+
+export async function getFolderBreadcrumbs(folderId: string) {
+  const folder = await getFolderById(folderId);
+
+  if (!folder) {
+    return null;
+  }
+
+  const breadcrumbs = [folder];
+
+  let currentFolder = folder;
+  while (currentFolder.parentId) {
+    const parentFolder = await getFolderById(currentFolder.parentId);
+    if (!parentFolder) {
+      break;
+    }
+
+    breadcrumbs.unshift(parentFolder);
+    currentFolder = parentFolder;
+  }
+
+  return breadcrumbs;
+}
