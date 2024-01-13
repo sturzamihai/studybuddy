@@ -5,7 +5,8 @@ import {
   UpdateDocumentDto,
   documents,
 } from "@/database/schema/document";
-import { eq } from "drizzle-orm";
+import { folders } from "@/database/schema/folder";
+import { eq, isNull } from "drizzle-orm";
 
 export async function createDocument(
   document: Omit<CreateDocumentDto, "id">
@@ -44,6 +45,30 @@ export async function getDocumentsByAuthor(
     .select()
     .from(documents)
     .where(eq(documents.authorId, authorId));
+
+  return queryResult;
+}
+
+export async function getDocumentsByFolder(
+  authorId: string,
+  folderId: string | null
+): Promise<Document[]> {
+  const folderIdQuery = folderId ? eq(documents.folderId, folderId) : isNull(documents.folderId);
+
+  const queryResult = await db
+    .select({
+      id: documents.id,
+      title: documents.title,
+      content: documents.content,
+      createdAt: documents.createdAt,
+      updatedAt: documents.updatedAt,
+      authorId: documents.authorId,
+      folderId: documents.folderId,
+    })
+    .from(documents)
+    .leftJoin(folders, eq(folders.id, documents.folderId))
+    .where(eq(folders.ownerId, authorId))
+    .where(folderIdQuery)
 
   return queryResult;
 }

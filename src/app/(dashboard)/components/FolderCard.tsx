@@ -13,7 +13,7 @@ export default function FolderCard({ folder }: { folder: Folder }) {
   return (
     <ContextMenu>
       <ContextMenuTrigger>
-        <Link href={`/f/${folder.id}`}>
+        <Link href={`/folders/${folder.id}`}>
           <Card className="flex items-center gap-2 p-2">
             <FolderIcon className="w-5 h-5" />
             <p className="font-medium mt-0">{folder.name}</p>
