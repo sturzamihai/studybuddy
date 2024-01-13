@@ -135,7 +135,7 @@ export default function Editor({
     },
     editorProps: {
       attributes: {
-        class: `prose dark:prose-invert prose-sm sm:prose-base lg:prose-lg xl:prose-2xl focus:outline-none w-full h-full`,
+        class: `prose dark:prose-invert prose-sm sm:prose-base lg:prose-lg xl:prose-2xl focus:outline-none`,
       },
     },
   });

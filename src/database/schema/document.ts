@@ -2,14 +2,12 @@ import {
   timestamp,
   pgTable,
   text,
-  primaryKey,
-  integer,
   json,
+  primaryKey,
 } from "drizzle-orm/pg-core";
 import { users } from "./user";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
-import { relations } from "drizzle-orm";
 import { folders } from "./folder";
 
 export const documents = pgTable("document", {
@@ -45,3 +43,22 @@ export const createDocumentSchema = createInsertSchema(documents, {
   createdAt: z.any(),
   updatedAt: z.any(),
 });
+
+export const documentSharing = pgTable(
+  "document_sharing",
+  {
+    documentId: text("documentId")
+      .notNull()
+      .references(() => documents.id, {
+        onDelete: "cascade",
+      }),
+    userId: text("userId")
+      .notNull()
+      .references(() => users.id, {
+        onDelete: "cascade",
+      }),
+  },
+  (t) => ({
+    pk: primaryKey(t.documentId, t.userId),
+  })
+);

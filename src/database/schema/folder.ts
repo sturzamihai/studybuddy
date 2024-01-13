@@ -1,4 +1,10 @@
-import { integer, pgTable, text, timestamp } from "drizzle-orm/pg-core";
+import {
+  integer,
+  pgTable,
+  primaryKey,
+  text,
+  timestamp,
+} from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -20,3 +26,18 @@ export const createFolderSchema = z.object({
   parentId: z.string().optional(),
   ownerId: z.string(),
 });
+
+export const folderSharing = pgTable(
+  "folder_sharing",
+  {
+    folderId: text("folderId")
+      .notNull()
+      .references(() => folders.id, { onDelete: "cascade" }),
+    userId: text("userId")
+      .notNull()
+      .references(() => folders.id, { onDelete: "cascade" }),
+  },
+  (t) => ({
+    pk: primaryKey(t.folderId, t.userId),
+  })
+);

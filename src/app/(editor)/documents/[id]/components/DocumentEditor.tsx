@@ -24,7 +24,7 @@ export default function DocumentEditor({ document }: { document: Document }) {
   };
 
   return (
-    <div className="max-w-7xl min-h-screen rounded mx-auto bg-white p-16 shadow">
+    <div className="max-w-7xl min-h-screen md:rounded mx-auto bg-white p-10 md:p-16 shadow">
       <Editor
         content={document.content as string}
         onDebouncedUpdate={updateDocumentContent}

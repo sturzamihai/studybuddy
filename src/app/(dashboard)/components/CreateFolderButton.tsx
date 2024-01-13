@@ -42,7 +42,7 @@ export default function CreateFolderButton({
         return res.json();
       })
       .then((data) => {
-        console.log("data");
+        // TODO
       })
       .catch((err) => {
         console.error(err);

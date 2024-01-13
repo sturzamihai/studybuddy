@@ -9,12 +9,16 @@ import {
 } from "@/components/ui/Dialog";
 import { Document } from "@/database/schema/document";
 import { Share } from "lucide-react";
+import AddMemberCombobox from "./AddMemberCombobox";
+import { getDocumentAccessList } from "@/services/document.service";
+import MemberList from "./MemberList";
 
-export default function ShareDocumentDialog({
+export default async function ShareDocumentDialog({
   document,
 }: {
   document: Document;
 }) {
+  const accessList = await getDocumentAccessList(document.id);
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -26,10 +30,9 @@ export default function ShareDocumentDialog({
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Share {document.title}</DialogTitle>
-          <DialogDescription>
-            Sharing dialog
-          </DialogDescription>
         </DialogHeader>
+        <AddMemberCombobox document={document} />
+        {accessList && <MemberList document={document} members={accessList} />}
       </DialogContent>
     </Dialog>
   );
