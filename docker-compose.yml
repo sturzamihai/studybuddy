@@ -1,0 +1,35 @@
+version: "3"
+
+services:
+  web:
+    container_name: studybuddy-web
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - POSTGRES_HOST=database
+    env_file:
+      - .env
+    volumes:
+      - ./src:/app/src
+      - ./public:/app/public
+    restart: always
+    ports:
+      - 3000:3000
+    depends_on:
+      - database
+
+  database:
+    container_name: studybuddy-db
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DATABASE}
+    env_file:
+      - .env
+    volumes:
+      - ./volumes/db:/var/lib/postgresql/data
+    restart: always
+    ports:
+      - 5432:5432

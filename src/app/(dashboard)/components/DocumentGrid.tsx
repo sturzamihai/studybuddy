@@ -17,7 +17,8 @@ export default async function DocumentGrid({
     return (
       <div>
         <h3 className="font-medium mb-2">Documents</h3>
-        <small>No documents found.</small>
+        <p className="mb-2">No documents found.</p>
+        <CreateDocumentButton folder={folder} />
       </div>
     );
   }

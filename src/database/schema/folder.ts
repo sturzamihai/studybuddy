@@ -22,8 +22,8 @@ export type CreateFolderDto = Omit<
   "id" | "createdAt"
 >;
 export const createFolderSchema = z.object({
-  name: z.string(),
-  parentId: z.string().optional(),
+  name: z.string().min(1).max(255),
+  parentId: z.string().optional().nullable(),
   ownerId: z.string(),
 });
 
