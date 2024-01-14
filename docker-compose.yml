@@ -18,6 +18,10 @@ services:
       - 3000:3000
     depends_on:
       - database
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.studybuddy.rule=Host(`gostudybuddy.tech`)"
+      - "traefik.http.routers.studybuddy.entrypoints=web"
 
   database:
     container_name: studybuddy-db
