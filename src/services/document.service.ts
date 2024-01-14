@@ -2,7 +2,9 @@ import db from "@/database/client";
 import {
   CreateDocumentDto,
   Document,
+  DocumentAttachment,
   UpdateDocumentDto,
+  documentAttachments,
   documentSharing,
   documents,
 } from "@/database/schema/document";
@@ -48,6 +50,24 @@ export async function getDocumentsByAuthor(
     .select()
     .from(documents)
     .where(eq(documents.authorId, authorId));
+
+  return queryResult;
+}
+
+export async function getSharedDocuments(userId: string): Promise<Document[]> {
+  const queryResult = await db
+    .select({
+      id: documents.id,
+      title: documents.title,
+      content: documents.content,
+      createdAt: documents.createdAt,
+      updatedAt: documents.updatedAt,
+      authorId: documents.authorId,
+      folderId: documents.folderId,
+    })
+    .from(documents)
+    .leftJoin(documentSharing, eq(documents.id, documentSharing.documentId))
+    .where(eq(documentSharing.userId, userId));
 
   return queryResult;
 }
@@ -115,6 +135,22 @@ export async function removeDocumentAccess(
         eq(documentSharing.userId, userId)
       )
     );
+}
+
+export async function addDocumentAttachment(
+  documentId: string,
+  path: string
+): Promise<DocumentAttachment> {
+  const [newAttachment] = await db
+    .insert(documentAttachments)
+    .values({
+      id: crypto.randomUUID(),
+      documentId,
+      path,
+    })
+    .returning();
+
+  return newAttachment;
 }
 
 export async function hasDocumentAccess(

@@ -3,7 +3,9 @@ import Link from "next/link";
 import SignInButton from "./SignInButton";
 import { auth } from "@/configs/next-auth.config";
 import TeamSwitcher from "./TeamSwitcher";
-import { getUserTeams } from "@/services/user.service";
+import { getUserTeams } from "@/services/team.service";
+import { Button } from "../ui/Button";
+import { Users } from "lucide-react";
 
 export default async function Navbar() {
   const session = await auth();
@@ -42,16 +44,23 @@ export default async function Navbar() {
           </Link>
           <TeamSwitcher teams={fullTeams} />
         </div>
-
-        <Avatar>
-          <AvatarImage
-            src={user.image ?? undefined}
-            alt={user.name ?? undefined}
-          />
-          <AvatarFallback>
-            {`${user.name?.charAt(0)}${user.name?.charAt(1)}`}
-          </AvatarFallback>
-        </Avatar>
+        <div className="flex items-center gap-4">
+          <Button variant={"ghost"} asChild>
+            <Link href="/shared">
+              <Users className="w-4 h-4 mr-2" />
+              Shared with me
+            </Link>
+          </Button>
+          <Avatar>
+            <AvatarImage
+              src={user.image ?? undefined}
+              alt={user.name ?? undefined}
+            />
+            <AvatarFallback>
+              {`${user.name?.charAt(0)}${user.name?.charAt(1)}`}
+            </AvatarFallback>
+          </Avatar>
+        </div>
       </div>
     </nav>
   );

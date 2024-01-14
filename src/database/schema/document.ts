@@ -62,3 +62,19 @@ export const documentSharing = pgTable(
     pk: primaryKey(t.documentId, t.userId),
   })
 );
+
+export const documentAttachments = pgTable("document_attachment", {
+  id: text("id").notNull().primaryKey(),
+  documentId: text("documentId")
+    .notNull()
+    .references(() => documents.id, {
+      onDelete: "cascade",
+    }),
+  path: text("attachmentPath").notNull(),
+});
+
+export type DocumentAttachment = typeof documentAttachments.$inferSelect;
+export type CreateDocumentAttachmentDto = Omit<
+  typeof documentAttachments.$inferInsert,
+  "id"
+>;

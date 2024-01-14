@@ -36,6 +36,13 @@
       "when": 1705178940622,
       "tag": "0004_smiling_bedlam",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "5",
+      "when": 1705247676456,
+      "tag": "0005_whole_wilson_fisk",
+      "breakpoints": true
     }
   ]
 }

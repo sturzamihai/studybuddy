@@ -13,7 +13,7 @@ import { getFoldersByOwner } from "@/services/folder.service";
 import FolderGrid from "./components/FolderGrid";
 import DocumentGrid from "./components/DocumentGrid";
 
-export default async function Homepage() {
+export default async function Dashboard() {
   const session = await auth();
   const user = session?.user;
 

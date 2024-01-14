@@ -17,6 +17,15 @@ import Table from "@tiptap/extension-table";
 import TableRow from "@tiptap/extension-table-row";
 import TableHeader from "@tiptap/extension-table-header";
 import TableCell from "@tiptap/extension-table-cell";
+import TiptapImage from "@tiptap/extension-image";
+import TextStyle from "@tiptap/extension-text-style";
+import { Color } from "@tiptap/extension-color";
+import UploadImagesPlugin, { startImageUpload } from "./plugins/upload-image";
+import EditorBubbleMenu from "./extensions/bubble-menu";
+import TiptapUnderline from "@tiptap/extension-underline";
+import TiptapSubscript from "@tiptap/extension-subscript";
+import TiptapSuperscript from "@tiptap/extension-superscript";
+import Iframe from "./extensions/iframe";
 
 export default function Editor({
   content,
@@ -30,7 +39,46 @@ export default function Editor({
   const editor = useEditor({
     content: content,
     extensions: [
-      StarterKit,
+      StarterKit.configure({
+        bulletList: {
+          HTMLAttributes: {
+            class: "list-disc list-outside leading-3 -mt-2",
+          },
+        },
+        orderedList: {
+          HTMLAttributes: {
+            class: "list-decimal list-outside leading-3 -mt-2",
+          },
+        },
+        listItem: {
+          HTMLAttributes: {
+            class: "leading-normal -mb-2",
+          },
+        },
+        blockquote: {
+          HTMLAttributes: {
+            class: "border-l-4 border-gray-700",
+          },
+        },
+        codeBlock: {
+          HTMLAttributes: {
+            class:
+              "rounded-sm bg-gray-100 p-5 font-mono font-medium text-gray-800",
+          },
+        },
+        code: {
+          HTMLAttributes: {
+            class:
+              "rounded-md bg-gray-200 px-1.5 py-1 font-mono font-medium text-gray-800",
+            spellcheck: "false",
+          },
+        },
+        horizontalRule: false,
+        dropcursor: {
+          color: "#DBEAFE",
+          width: 4,
+        },
+      }),
       Placeholder.configure({
         placeholder: ({ node }) => {
           return `Start typing... or press '/' for a list of commands`;
@@ -47,10 +95,26 @@ export default function Editor({
         },
         nested: true,
       }),
+      TiptapImage.extend({
+        addProseMirrorPlugins() {
+          return [UploadImagesPlugin()];
+        },
+      }).configure({
+        allowBase64: true,
+        HTMLAttributes: {
+          class: "rounded-md border border-gray-200",
+        },
+      }),
+      TiptapSuperscript,
+      TiptapSubscript,
+      TiptapUnderline,
+      Color,
+      TextStyle,
       Table,
       TableHeader,
       TableRow,
       TableCell,
+      Iframe,
       SlashCommands.configure({
         suggestion: {
           items: (): CommandItem[] => [
@@ -137,12 +201,37 @@ export default function Editor({
       attributes: {
         class: `prose dark:prose-invert prose-sm sm:prose-base lg:prose-lg xl:prose-2xl focus:outline-none`,
       },
+      handleDrop: (view, event, _slice, moved) => {
+        if (
+          !moved &&
+          event.dataTransfer &&
+          event.dataTransfer.files &&
+          event.dataTransfer.files[0]
+        ) {
+          event.preventDefault();
+          const file = event.dataTransfer.files[0];
+          const coordinates = view.posAtCoords({
+            left: event.clientX,
+            top: event.clientY,
+          });
+          // here we deduct 1 from the pos or else the image will create an extra node
+          startImageUpload(file, view, coordinates?.pos || 0 - 1);
+          return true;
+        }
+        return false;
+      },
     },
+    autofocus: "end",
   });
 
   const debouncedUpdates = useDebouncedCallback(async ({ editor }) => {
     onDebouncedUpdate(editor);
   }, debounceDuration);
 
-  return <EditorContent editor={editor} />;
+  return (
+    <div>
+      {editor && <EditorBubbleMenu editor={editor} />}
+      <EditorContent editor={editor} />
+    </div>
+  );
 }
