@@ -11,6 +11,8 @@ services:
     env_file:
       - .env
     restart: always
+    networks:
+      - traefik
     ports:
       - 3000:3000
     depends_on:
@@ -35,3 +37,7 @@ services:
     restart: always
     ports:
       - 5432:5432
+
+networks:
+  traefik:
+    external: true
