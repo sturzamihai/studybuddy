@@ -21,7 +21,8 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.studybuddy.rule=Host(`gostudybuddy.tech`)"
-      - "traefik.http.routers.studybuddy.entrypoints=web"
+      - "traefik.http.routers.studybuddy.entrypoints=websecure"
+      - "traefik.http.routers.studybuddy.tls.certresolver=myresolver"
 
   database:
     container_name: studybuddy-db
