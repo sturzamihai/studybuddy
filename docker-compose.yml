@@ -22,6 +22,7 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.studybuddy.rule=Host(`gostudybuddy.tech`)"
       - "traefik.http.routers.studybuddy.entrypoints=web"
+      - "traefik.http.services.studybuddy.loadbalancer.server.port=3000"
 
   database:
     container_name: studybuddy-db
