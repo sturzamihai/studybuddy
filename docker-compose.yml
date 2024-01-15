@@ -8,11 +8,12 @@ services:
       dockerfile: Dockerfile
     environment:
       - POSTGRES_HOST=database
+    networks:
+      - proxy
+      - default
     env_file:
       - .env
     restart: always
-    networks:
-      - traefik
     ports:
       - 3000:3000
     depends_on:
@@ -20,8 +21,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.studybuddy.rule=Host(`gostudybuddy.tech`)"
-      - "traefik.http.routers.studybuddy.entrypoints=websecure"
-      - "traefik.http.routers.studybuddy.tls.certresolver=myresolver"
+      - "traefik.http.routers.studybuddy.entrypoints=web"
 
   database:
     container_name: studybuddy-db
@@ -39,5 +39,5 @@ services:
       - 5432:5432
 
 networks:
-  traefik:
+  proxy:
     external: true
