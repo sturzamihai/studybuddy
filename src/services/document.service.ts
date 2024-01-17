@@ -139,6 +139,7 @@ export async function removeDocumentAccess(
 
 export async function addDocumentAttachment(
   documentId: string,
+  file: File,
   path: string
 ): Promise<DocumentAttachment> {
   const [newAttachment] = await db
@@ -147,10 +148,39 @@ export async function addDocumentAttachment(
       id: crypto.randomUUID(),
       documentId,
       path,
+      originalFileName: file.name,
+      size: file.size,
+      createdAt: new Date(),
     })
     .returning();
 
   return newAttachment;
+}
+
+export async function getDocumentAttachment(
+  documentId: string,
+  attachmentId: string
+) {
+  const [attachment] = await db
+    .select()
+    .from(documentAttachments)
+    .where(
+      and(
+        eq(documentAttachments.documentId, documentId),
+        eq(documentAttachments.id, attachmentId)
+      )
+    );
+
+  return attachment;
+}
+
+export async function getDocumentAttachments(documentId: string) {
+  const attachments = await db
+    .select()
+    .from(documentAttachments)
+    .where(eq(documentAttachments.documentId, documentId));
+
+  return attachments;
 }
 
 export async function hasDocumentAccess(

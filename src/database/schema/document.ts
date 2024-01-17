@@ -4,6 +4,8 @@ import {
   text,
   json,
   primaryKey,
+  numeric,
+  integer,
 } from "drizzle-orm/pg-core";
 import { users } from "./user";
 import { createInsertSchema } from "drizzle-zod";
@@ -70,7 +72,10 @@ export const documentAttachments = pgTable("document_attachment", {
     .references(() => documents.id, {
       onDelete: "cascade",
     }),
+  originalFileName: text("originalFileName").notNull(),
   path: text("attachmentPath").notNull(),
+  size: integer("attachmentSize").notNull(),
+  createdAt: timestamp("createdAt", { mode: "date" }).notNull(),
 });
 
 export type DocumentAttachment = typeof documentAttachments.$inferSelect;

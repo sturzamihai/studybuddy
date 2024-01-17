@@ -3,7 +3,6 @@
 import {
   Editor as EditorClass,
   EditorContent,
-  JSONContent,
   useEditor,
 } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
@@ -20,24 +19,25 @@ import TableCell from "@tiptap/extension-table-cell";
 import TiptapImage from "@tiptap/extension-image";
 import TextStyle from "@tiptap/extension-text-style";
 import { Color } from "@tiptap/extension-color";
-import UploadImagesPlugin, { startImageUpload } from "./plugins/upload-image";
+import UploadImagesPlugin, { startDocumentUpload } from "./plugins/upload-image";
 import EditorBubbleMenu from "./extensions/bubble-menu";
 import TiptapUnderline from "@tiptap/extension-underline";
 import TiptapSubscript from "@tiptap/extension-subscript";
 import TiptapSuperscript from "@tiptap/extension-superscript";
 import Iframe from "./extensions/iframe";
+import { Document } from "@/database/schema/document";
 
 export default function Editor({
-  content,
+  document,
   onDebouncedUpdate = () => {},
   debounceDuration = 750,
 }: {
-  content?: JSONContent | string;
+  document?: Document
   onDebouncedUpdate?: (editor: EditorClass) => void;
   debounceDuration?: number;
 }) {
   const editor = useEditor({
-    content: content,
+    content: document?.content ? document.content as string : null,
     extensions: [
       StarterKit.configure({
         bulletList: {
@@ -202,6 +202,8 @@ export default function Editor({
         class: `prose dark:prose-invert prose-sm sm:prose-base lg:prose-lg xl:prose-2xl focus:outline-none`,
       },
       handleDrop: (view, event, _slice, moved) => {
+        if(!document) return false;
+
         if (
           !moved &&
           event.dataTransfer &&
@@ -214,8 +216,9 @@ export default function Editor({
             left: event.clientX,
             top: event.clientY,
           });
+
           // here we deduct 1 from the pos or else the image will create an extra node
-          startImageUpload(file, view, coordinates?.pos || 0 - 1);
+          startDocumentUpload(document?.id, file, view, coordinates?.pos || 0 - 1);
           return true;
         }
         return false;

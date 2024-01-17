@@ -43,6 +43,48 @@
       "when": 1705247676456,
       "tag": "0005_whole_wilson_fisk",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "5",
+      "when": 1705515086327,
+      "tag": "0006_woozy_timeslip",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "5",
+      "when": 1705515104639,
+      "tag": "0007_ambiguous_ted_forrester",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "5",
+      "when": 1705515219888,
+      "tag": "0008_cold_vivisector",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "5",
+      "when": 1705515296491,
+      "tag": "0009_curly_black_crow",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "5",
+      "when": 1705516211701,
+      "tag": "0010_chunky_omega_flight",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "5",
+      "when": 1705516229562,
+      "tag": "0011_puzzling_nemesis",
+      "breakpoints": true
     }
   ]
 }

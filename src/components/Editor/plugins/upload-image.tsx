@@ -1,3 +1,4 @@
+import { DocumentAttachment } from "@/database/schema/document";
 import { EditorState, Plugin, PluginKey } from "@tiptap/pm/state";
 import { Decoration, DecorationSet, EditorView } from "@tiptap/pm/view";
 
@@ -22,7 +23,7 @@ const UploadImagesPlugin = () =>
           const image = document.createElement("img");
           image.setAttribute(
             "class",
-            "opacity-40 rounded-lg border border-stone-200"
+            "opacity-40 rounded-lg border border-stone-200 animate-pulse"
           );
           image.src = src;
           placeholder.appendChild(image);
@@ -32,7 +33,11 @@ const UploadImagesPlugin = () =>
           set = set.add(tr.doc, [deco]);
         } else if (action && action.remove) {
           set = set.remove(
-            set.find(undefined, undefined, (spec) => spec.id == action.remove.id)
+            set.find(
+              undefined,
+              undefined,
+              (spec) => spec.id == action.remove.id
+            )
           );
         }
         return set;
@@ -53,42 +58,50 @@ function findPlaceholder(state: EditorState, id: {}) {
   return found.length ? found[0].from : null;
 }
 
-export function startImageUpload(file: File, view: EditorView, pos: number) {
-  if (!file.type.includes("image/")) {
-    console.error("File is not an image.");
-    return;
-  } else if (file.size / 1024 / 1024 > 20) {
+export function startDocumentUpload(
+  documentId: string,
+  file: File,
+  view: EditorView,
+  pos: number
+) {
+  if (file.size / 1024 / 1024 > 20) {
     console.error("File is too big.");
     return;
   }
 
   const id = {};
 
-  const tr = view.state.tr;
-  if (!tr.selection.empty) tr.deleteSelection();
+  if (file.type.includes("image/")) {
+    const tr = view.state.tr;
+    if (!tr.selection.empty) tr.deleteSelection();
 
-  const reader = new FileReader();
-  reader.readAsDataURL(file);
-  reader.onload = () => {
-    tr.setMeta(uploadKey, {
-      add: {
-        id,
-        pos,
-        src: reader.result,
-      },
-    });
-    view.dispatch(tr);
-  };
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+      tr.setMeta(uploadKey, {
+        add: {
+          id,
+          pos,
+          src: reader.result,
+        },
+      });
+      view.dispatch(tr);
+    };
+  }
 
-  handleImageUpload(file).then((src) => {
+  handleDocumentUpload(documentId, file).then((attachment) => {
+    const documentSrc = `/api/documents/${documentId}/attachments/${attachment.id}`;
+
+    if (!isImageDocument(attachment.path)) {
+      return;
+    }
+
     const { schema } = view.state;
 
     let pos = findPlaceholder(view.state, id);
     if (pos == null) return;
 
-    const imageSrc = typeof src === "object" ? reader.result : src;
-
-    const node = schema.nodes.image.create({ src: imageSrc });
+    const node = schema.nodes.image.create({ src: documentSrc });
     const transaction = view.state.tr
       .replaceWith(pos, pos, node)
       .setMeta(uploadKey, { remove: { id } });
@@ -96,11 +109,19 @@ export function startImageUpload(file: File, view: EditorView, pos: number) {
   });
 }
 
-export async function handleImageUpload(file: File) {
+function isImageDocument(path: string) {
+  const ext = path.split(".").pop();
+  if (!ext) return false;
+
+  const imageExtensions = ["jpg", "jpeg", "png", "gif"];
+  return imageExtensions.includes(ext);
+}
+
+export async function handleDocumentUpload(documentId: string, file: File) {
   const formData = new FormData();
   formData.append("file", file);
 
-  const res = await fetch("/api/upload/image", {
+  const res = await fetch(`/api/documents/${documentId}/attachments`, {
     method: "POST",
     body: formData,
   });
@@ -109,6 +130,6 @@ export async function handleImageUpload(file: File) {
     throw new Error("Failed to upload image");
   }
 
-  const data = await res.json();
-  return data.path;
+  const data = (await res.json()) as DocumentAttachment;
+  return data;
 }

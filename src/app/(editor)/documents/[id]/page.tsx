@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import DocumentEditor from "./components/DocumentEditor";
 import {
+  getDocumentAttachments,
   getDocumentById,
   hasDocumentAccess,
 } from "@/services/document.service";
@@ -8,6 +9,7 @@ import TitleEditor from "./components/TitleEditor";
 import ShareDocumentDialog from "@/components/ShareDocument";
 import Link from "next/link";
 import { auth } from "@/configs/next-auth.config";
+import AttachmentSheet from "./components/AttachmentSheet";
 
 export default async function DocumentPage({
   params,
@@ -15,6 +17,7 @@ export default async function DocumentPage({
   params: { id: string };
 }) {
   const document = await getDocumentById(params.id);
+  const attachments = await getDocumentAttachments(params.id);
 
   if (!document) {
     notFound();
@@ -41,7 +44,10 @@ export default async function DocumentPage({
             </Link>
             <TitleEditor document={document} />
           </div>
-          <ShareDocumentDialog document={document} />
+          <div className="flex items-center gap-2">
+            <AttachmentSheet document={document} attachments={attachments} />
+            <ShareDocumentDialog document={document} />
+          </div>
         </div>
       </div>
       <div className="-mt-60">

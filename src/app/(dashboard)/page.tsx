@@ -1,15 +1,5 @@
 import { auth } from "@/configs/next-auth.config";
-import CreateDocumentButton from "./components/CreateDocumenButton";
-import {
-  getDocumentsByAuthor,
-  getDocumentsByFolder,
-} from "@/services/document.service";
-import { Document } from "@/database/schema/document";
 import { redirect } from "next/navigation";
-import DocumentCard from "./components/DocumentCard";
-import CreateFolderButton from "./components/CreateFolderButton";
-import FolderCard from "./components/FolderCard";
-import { getFoldersByOwner } from "@/services/folder.service";
 import FolderGrid from "./components/FolderGrid";
 import DocumentGrid from "./components/DocumentGrid";
 
