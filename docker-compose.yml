@@ -1,0 +1,44 @@
+version: "3"
+
+services:
+  web:
+    container_name: studybuddy-web
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - POSTGRES_HOST=database
+    networks:
+      - proxy
+      - default
+    env_file:
+      - .env
+    restart: always
+    ports:
+      - 3000:3000
+    depends_on:
+      - database
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.studybuddy.rule=Host(`gostudybuddy.tech`)"
+      - "traefik.http.routers.studybuddy.entrypoints=web"
+      - "traefik.http.services.studybuddy.loadbalancer.server.port=3000"
+
+  database:
+    container_name: studybuddy-db
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DATABASE}
+    env_file:
+      - .env
+    volumes:
+      - ${DOCKER_VOLUME_DIRECTORY:-.}/volumes/db:/var/lib/postgresql/data
+    restart: always
+    ports:
+      - 5432:5432
+
+networks:
+  proxy:
+    external: true

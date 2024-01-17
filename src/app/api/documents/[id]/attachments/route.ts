@@ -2,7 +2,7 @@ import { addDocumentAttachment } from "@/services/document.service";
 import { writeFile } from "fs/promises";
 import { NextRequest } from "next/server";
 
-export default async function POST(
+export async function POST(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
