@@ -1,9 +1,8 @@
 import db from "@/database/client";
 import { CreateTeamDto, teamMembers, teams } from "@/database/schema/user";
 import notNull from "@/utils/nonNull";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { getUserById } from "./user.service";
-
 
 export async function getUserTeams(userId: string) {
   const ownedTeams = await db
@@ -89,4 +88,13 @@ export async function getTeamMembers(teamId: string) {
   );
 
   return [owner, ...members];
+}
+
+export async function isTeamMember(teamId: string, userId: string) {
+  const memberRelation = await db
+    .select()
+    .from(teamMembers)
+    .where(and(eq(teamMembers.teamId, teamId), eq(teamMembers.userId, userId)));
+
+  return memberRelation.length > 0;
 }

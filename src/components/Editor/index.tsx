@@ -1,10 +1,6 @@
 "use client";
 
-import {
-  Editor as EditorClass,
-  EditorContent,
-  useEditor,
-} from "@tiptap/react";
+import { Editor as EditorClass, EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { useDebouncedCallback } from "use-debounce";
 import Placeholder from "@tiptap/extension-placeholder";
@@ -19,25 +15,36 @@ import TableCell from "@tiptap/extension-table-cell";
 import TiptapImage from "@tiptap/extension-image";
 import TextStyle from "@tiptap/extension-text-style";
 import { Color } from "@tiptap/extension-color";
-import UploadImagesPlugin, { startDocumentUpload } from "./plugins/upload-image";
+import UploadImagesPlugin, {
+  startDocumentUpload,
+} from "./plugins/upload-image";
 import EditorBubbleMenu from "./extensions/bubble-menu";
 import TiptapUnderline from "@tiptap/extension-underline";
 import TiptapSubscript from "@tiptap/extension-subscript";
 import TiptapSuperscript from "@tiptap/extension-superscript";
 import Iframe from "./extensions/iframe";
 import { Document } from "@/database/schema/document";
+import {
+  Frame,
+  Heading1,
+  Heading2,
+  Heading3,
+  List,
+  ListOrdered,
+  ListTodo,
+} from "lucide-react";
 
 export default function Editor({
   document,
   onDebouncedUpdate = () => {},
   debounceDuration = 750,
 }: {
-  document?: Document
+  document?: Document;
   onDebouncedUpdate?: (editor: EditorClass) => void;
   debounceDuration?: number;
 }) {
   const editor = useEditor({
-    content: document?.content ? document.content as string : null,
+    content: document?.content ? (document.content as string) : null,
     extensions: [
       StarterKit.configure({
         bulletList: {
@@ -120,11 +127,7 @@ export default function Editor({
           items: (): CommandItem[] => [
             {
               title: "Heading 1",
-              icon: (
-                <p>
-                  H<sub>1</sub>
-                </p>
-              ),
+              icon: <Heading1 className="w-4 h-4" />,
               command: ({ editor, range }) => {
                 editor
                   .chain()
@@ -136,11 +139,7 @@ export default function Editor({
             },
             {
               title: "Heading 2",
-              icon: (
-                <p>
-                  H<sub>2</sub>
-                </p>
-              ),
+              icon: <Heading2 className="w-4 h-4" />,
               command: ({ editor, range }) => {
                 editor
                   .chain()
@@ -152,11 +151,7 @@ export default function Editor({
             },
             {
               title: "Heading 3",
-              icon: (
-                <p>
-                  H<sub>3</sub>
-                </p>
-              ),
+              icon: <Heading3 className="w-4 h-4" />,
               command: ({ editor, range }) => {
                 editor
                   .chain()
@@ -168,7 +163,7 @@ export default function Editor({
             },
             {
               title: "Bullet List",
-              icon: <p>•</p>,
+              icon: <List className="w-4 h-4" />,
               command: ({ editor, range }) => {
                 editor
                   .chain()
@@ -179,8 +174,20 @@ export default function Editor({
               },
             },
             {
+              title: "Numbered List",
+              icon: <ListOrdered className="w-4 h-4" />,
+              command: ({ editor, range }) => {
+                editor
+                  .chain()
+                  .focus()
+                  .deleteRange(range)
+                  .toggleOrderedList()
+                  .run();
+              },
+            },
+            {
               title: "Task List",
-              icon: <p>☐</p>,
+              icon: <ListTodo className="w-4 h-4" />,
               command: ({ editor, range }) => {
                 editor
                   .chain()
@@ -188,6 +195,17 @@ export default function Editor({
                   .deleteRange(range)
                   .toggleTaskList()
                   .run();
+              },
+            },
+            {
+              title: "Iframe",
+              icon: <Frame className="w-4 h-4" />,
+              command: ({ editor, range }) => {
+                const url = window.prompt("Enter the URL of the iframe");
+
+                if (url) {
+                  editor.chain().focus().setIframe({ src: url }).run();
+                }
               },
             },
           ],
@@ -202,7 +220,7 @@ export default function Editor({
         class: `prose dark:prose-invert prose-sm sm:prose-base lg:prose-lg xl:prose-2xl focus:outline-none`,
       },
       handleDrop: (view, event, _slice, moved) => {
-        if(!document) return false;
+        if (!document) return false;
 
         if (
           !moved &&
@@ -218,7 +236,12 @@ export default function Editor({
           });
 
           // here we deduct 1 from the pos or else the image will create an extra node
-          startDocumentUpload(document?.id, file, view, coordinates?.pos || 0 - 1);
+          startDocumentUpload(
+            document?.id,
+            file,
+            view,
+            coordinates?.pos || 0 - 1
+          );
           return true;
         }
         return false;

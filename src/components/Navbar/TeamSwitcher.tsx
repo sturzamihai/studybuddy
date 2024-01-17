@@ -1,4 +1,5 @@
 "use client";
+"use client";
 
 import type { Team } from "@/database/schema/user";
 import {
@@ -19,9 +20,16 @@ import {
   CommandSeparator,
   CommandEmpty,
 } from "../ui/Command";
+import { usePathname } from "next/navigation";
 
 export default function TeamSwitcher({ teams }: { teams: Team[] }) {
-  const [selectedTeam, setSelectedTeam] = useState<Team>(teams[0]);
+  const pathname = usePathname();
+  const isTeamPath = pathname.startsWith("/team");
+  const teamId = isTeamPath ? pathname.split("/")[2] : "personal";
+
+  const [selectedTeam, setSelectedTeam] = useState<Team>(
+    teams.find((team) => team.id === teamId) || teams[0]
+  );
 
   return (
     <Popover>
@@ -65,7 +73,8 @@ export default function TeamSwitcher({ teams }: { teams: Team[] }) {
           <CommandList>
             <CommandGroup>
               <CommandItem>
-                <Plus className="w-4 h-4 mr-2" />Create team
+                <Plus className="w-4 h-4 mr-2" />
+                Create team
               </CommandItem>
             </CommandGroup>
           </CommandList>

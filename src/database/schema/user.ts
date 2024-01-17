@@ -81,7 +81,7 @@ export const createTeamSchema = z.object({
 });
 
 export const teamMembers = pgTable(
-  "team_members",
+  "team_member",
   {
     teamId: text("teamId")
       .notNull()

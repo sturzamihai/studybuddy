@@ -1,32 +1,30 @@
-import { Button } from "@/components/ui/Button";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/Dialog";
 import { Document } from "@/database/schema/document";
-import { Share } from "lucide-react";
 import AddMemberCombobox from "./AddMemberCombobox";
-import { getDocumentAccessList } from "@/services/document.service";
 import MemberList from "./MemberList";
+import { useEffect, useState } from "react";
+import { User } from "@/database/schema/user";
+import { Loader2 } from "lucide-react";
+import { getDocumentAccessList } from "@/services/document.service";
 
 export default async function ShareDocumentDialog({
   document,
+  children,
 }: {
   document: Document;
+  children: React.ReactNode;
 }) {
   const accessList = await getDocumentAccessList(document.id);
+
   return (
     <Dialog>
-      <DialogTrigger asChild>
-        <Button variant={"secondary"}>
-          <p>Share</p>
-          <Share className="w-4 h-4 ml-2" />
-        </Button>
-      </DialogTrigger>
+      <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Share {document.title}</DialogTitle>
