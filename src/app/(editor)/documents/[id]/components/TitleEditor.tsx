@@ -27,7 +27,7 @@ export default function TitleEditor({ document }: { document: Document }) {
 
   if (isEditor) {
     return (
-      <div className="flex items-center group">
+      <div className="flex items-center group -ml-2">
         <Input
           className="bg-white/50 text-2xl font-semibold py-1 px-2 rounded-md w-auto rounded-r-none border-r-0 focus-visible:ring-0 focus-visible:outline-none"
           type="text"

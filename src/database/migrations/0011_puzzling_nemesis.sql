@@ -1,0 +1,1 @@
+ALTER TABLE "document_attachment" ALTER COLUMN "originalFileName" DROP DEFAULT;

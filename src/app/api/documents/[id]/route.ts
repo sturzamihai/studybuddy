@@ -1,6 +1,10 @@
 import { auth } from "@/configs/next-auth.config";
 import { updateDocumentSchema } from "@/database/schema/document";
-import { getDocumentById, updateDocument } from "@/services/document.service";
+import {
+  getDocumentById,
+  hasDocumentAccess,
+  updateDocument,
+} from "@/services/document.service";
 import formatError from "@/utils/formatError";
 
 export async function PATCH(
@@ -10,7 +14,7 @@ export async function PATCH(
   const session = await auth();
   const user = session?.user;
 
-  if (!user) {
+  if (!user || !(await hasDocumentAccess(params.id, user.id))) {
     return Response.json("Unauthorized", { status: 401 });
   }
 
@@ -32,7 +36,7 @@ export async function GET(
   const session = await auth();
   const user = session?.user;
 
-  if (!user) {
+  if (!user || !(await hasDocumentAccess(params.id, user.id))) {
     return Response.json("Unauthorized", { status: 401 });
   }
 

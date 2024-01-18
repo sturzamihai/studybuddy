@@ -12,6 +12,8 @@ import { Form, FormField, FormItem, FormMessage } from "@/components/ui/Form";
 import { Input } from "@/components/ui/Input";
 import { Folder } from "@/database/schema/folder";
 import { FolderPlus } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 
 export default function CreateFolderButton({
@@ -19,6 +21,8 @@ export default function CreateFolderButton({
 }: {
   folder?: Folder | null;
 }) {
+  const [isOpen, setIsOpen] = useState(false);
+  const router = useRouter();
   const form = useForm({
     defaultValues: {
       name: "",
@@ -26,7 +30,7 @@ export default function CreateFolderButton({
     },
   });
 
-  const onSubmit = form.handleSubmit((data) => {
+  const createFolder = form.handleSubmit((data) => {
     fetch("/api/folders", {
       method: "POST",
       headers: {
@@ -36,13 +40,11 @@ export default function CreateFolderButton({
     })
       .then((res) => {
         if (!res.ok) {
-          throw new Error(res.statusText);
+          throw new Error("Error creating folder");
         }
 
-        return res.json();
-      })
-      .then((data) => {
-        console.log("data");
+        setIsOpen(false);
+        router.refresh();
       })
       .catch((err) => {
         console.error(err);
@@ -50,7 +52,7 @@ export default function CreateFolderButton({
   });
 
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button variant={"outline"} className="border-dashed">
           <FolderPlus className="w-5 h-5 mr-2" />
@@ -59,7 +61,7 @@ export default function CreateFolderButton({
       </DialogTrigger>
       <DialogContent>
         <Form {...form}>
-          <form onSubmit={onSubmit}>
+          <form onSubmit={createFolder}>
             <DialogHeader>
               <DialogTitle>Create folder</DialogTitle>
             </DialogHeader>

@@ -2,14 +2,14 @@ import {
   timestamp,
   pgTable,
   text,
-  primaryKey,
-  integer,
   json,
+  primaryKey,
+  numeric,
+  integer,
 } from "drizzle-orm/pg-core";
-import { users } from "./user";
+import { teams, users } from "./user";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
-import { relations } from "drizzle-orm";
 import { folders } from "./folder";
 
 export const documents = pgTable("document", {
@@ -45,3 +45,54 @@ export const createDocumentSchema = createInsertSchema(documents, {
   createdAt: z.any(),
   updatedAt: z.any(),
 });
+
+export const documentSharing = pgTable(
+  "document_sharing",
+  {
+    documentId: text("documentId")
+      .notNull()
+      .references(() => documents.id, {
+        onDelete: "cascade",
+      }),
+    userId: text("userId")
+      .notNull()
+      .references(() => users.id, {
+        onDelete: "cascade",
+      }),
+  },
+  (t) => ({
+    pk: primaryKey(t.documentId, t.userId),
+  })
+);
+
+export const documentTeamSharing = pgTable("document_team_sharing", {
+  documentId: text("documentId")
+    .notNull()
+    .references(() => documents.id, {
+      onDelete: "cascade",
+    }),
+  teamId: text("teamId")
+    .notNull()
+    .references(() => teams.id, {
+      onDelete: "cascade",
+    }),
+});
+
+export const documentAttachments = pgTable("document_attachment", {
+  id: text("id").notNull().primaryKey(),
+  documentId: text("documentId")
+    .notNull()
+    .references(() => documents.id, {
+      onDelete: "cascade",
+    }),
+  originalFileName: text("originalFileName").notNull(),
+  path: text("attachmentPath").notNull(),
+  size: integer("attachmentSize").notNull(),
+  createdAt: timestamp("createdAt", { mode: "date" }).notNull(),
+});
+
+export type DocumentAttachment = typeof documentAttachments.$inferSelect;
+export type CreateDocumentAttachmentDto = Omit<
+  typeof documentAttachments.$inferInsert,
+  "id"
+>;

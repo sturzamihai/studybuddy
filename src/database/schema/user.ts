@@ -8,6 +8,7 @@ import {
 import type { AdapterAccount } from "@auth/core/adapters";
 import { documents } from "./document";
 import { relations } from "drizzle-orm";
+import { z } from "zod";
 
 export const users = pgTable("user", {
   id: text("id").notNull().primaryKey(),
@@ -64,3 +65,32 @@ export const verificationTokens = pgTable(
 export const usersRelation = relations(users, ({ one, many }) => ({
   documents: many(documents),
 }));
+
+export const teams = pgTable("team", {
+  id: text("id").notNull().primaryKey(),
+  name: text("name").notNull(),
+  ownerId: text("ownerId").notNull(),
+  createdAt: timestamp("createdAt", { mode: "date" }).notNull(),
+});
+
+export type Team = typeof teams.$inferSelect;
+export type CreateTeamDto = Omit<typeof teams.$inferInsert, "id" | "createdAt">;
+export const createTeamSchema = z.object({
+  name: z.string(),
+  ownerId: z.string(),
+});
+
+export const teamMembers = pgTable(
+  "team_member",
+  {
+    teamId: text("teamId")
+      .notNull()
+      .references(() => teams.id, { onDelete: "cascade" }),
+    userId: text("userId")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+  },
+  (t) => ({
+    pk: primaryKey(t.teamId, t.userId),
+  })
+);

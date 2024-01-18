@@ -1,9 +1,19 @@
+const authors = [
+  "Stoica Răzvan Iulian",
+  "Mihai-George Sturza",
+  "Ștefan Roberto-Ionuț",
+];
+
 export default function Footer() {
   return (
-    <footer>
-      <div className="container mx-auto text-gray-400 font-light text-sm">
-        <hr  className="mt-5 mb-2"/>
-        © {new Date().getFullYear()} MGS, RIS, RIS - 1096E. All rights reserved.
+    <footer className="flex justify-center flex-col items-center gap-4 font-mono">
+      <p className=" tracking-widest text-gray-500">STUDYBUDDY</p>
+      <div className="flex items-center divide-x">
+        {authors.map((author, idx) => (
+          <p key={idx} className="text-gray-400 text-xs uppercase px-2">
+            {author}
+          </p>
+        ))}
       </div>
     </footer>
   );

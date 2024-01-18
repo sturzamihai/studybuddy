@@ -22,6 +22,83 @@
       "when": 1703105068291,
       "tag": "0002_married_black_knight",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1705174176045,
+      "tag": "0003_odd_bucky",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1705178940622,
+      "tag": "0004_smiling_bedlam",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "5",
+      "when": 1705247676456,
+      "tag": "0005_whole_wilson_fisk",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "5",
+      "when": 1705515086327,
+      "tag": "0006_woozy_timeslip",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "5",
+      "when": 1705515104639,
+      "tag": "0007_ambiguous_ted_forrester",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "5",
+      "when": 1705515219888,
+      "tag": "0008_cold_vivisector",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "5",
+      "when": 1705515296491,
+      "tag": "0009_curly_black_crow",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "5",
+      "when": 1705516211701,
+      "tag": "0010_chunky_omega_flight",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "5",
+      "when": 1705516229562,
+      "tag": "0011_puzzling_nemesis",
+      "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "5",
+      "when": 1705524572528,
+      "tag": "0012_common_nextwave",
+      "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "5",
+      "when": 1705530298718,
+      "tag": "0013_yummy_jubilee",
+      "breakpoints": true
     }
   ]
 }

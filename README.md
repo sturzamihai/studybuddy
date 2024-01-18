@@ -1,18 +1,49 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Studybuddy
+> Final project for web technologies course
 
-## Getting Started
+## Getting started
 
-First, run the development server:
+### Prerequisites
+
+To run this project you need to have installed [Node.js](https://nodejs.org/en/). 
+
+Next, to install all dependencies run:
+
+```bash
+npm install
+```
+
+After installing the dependencies, setup your env file following the example in `.env.example` file.
+
+Then create a Postgres database and run the migrations:
+
+```bash
+npm run db:migrate
+```
+
+### Running
+
+#### Development
+
+To run the project in development mode run:
 
 ```bash
 npm run dev
 ```
+#### Production
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+To run the project in production mode run:
 
-### Docs and resources
+```bash
+docker compose up -d
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+Then, manually apply the migrtions by running the `migrate.ts` script:
 
+```bash
+npm run db:migrate
 
+# or
 
+npx tsx [...]/src/database/migrate.ts # make sure to have the correct env while running this command
+```

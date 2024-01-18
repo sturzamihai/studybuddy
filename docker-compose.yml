@@ -1,0 +1,70 @@
+version: "3.9"
+
+services:
+  studybuddy:
+    container_name: studybuddy-web
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - POSTGRES_HOST=database
+    env_file:
+      - .env
+    restart: always
+    ports:
+      - 3000:3000
+    depends_on:
+      - database
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.next.rule=Host(`gostudybuddy.tech`)"
+      - "traefik.http.routers.next.entrypoints=websecure"
+      - "traefik.http.routers.next.tls.certresolver=myresolver"
+        
+  database:
+    container_name: studybuddy-db
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DATABASE}
+    env_file:
+      - .env
+    volumes:
+      - ${DOCKER_VOLUME_DIRECTORY:-.}/volumes/db:/var/lib/postgresql/data
+    restart: always
+    ports:
+      - 5432:5432
+  traefik:
+    image: traefik:v3.0
+    container_name: traefik
+    restart: unless-stopped
+    command:
+      #      - "--api.dashboard=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
+      - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
+      - "--certificatesresolvers.myresolver.acme.tlschallenge=true"
+      - "--certificatesresolvers.myresolver.acme.email=webmaster@nevexo.ro"
+      - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./letsencrypt:/letsencrypt
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.traefik.rule=PathPrefix(`/dashboard`)"
+      - "traefik.http.routers.traefik.entrypoints=websecure"
+      - "traefik.http.routers.traefik.service=api@internal"
+      - "traefik.http.routers.traefik.tls.certresolver=myresolver"
+      - "traefik.http.routers.traefik.middlewares=traefik-auth"
+      - "traefik.http.middlewares.traefik-auth.basicauth.users=nevexo:$$2y$$05$$JEZ7ExpMPqN4e5wZ7ddQNOoRFasdpQ39mVIEFXpNBUDsoW8leRHDa"
+
+networks:
+  default:
+    name: studybuddy

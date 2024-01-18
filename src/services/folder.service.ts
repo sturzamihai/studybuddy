@@ -1,6 +1,6 @@
 import db from "@/database/client";
 import { CreateFolderDto, folders } from "@/database/schema/folder";
-import { eq, isNull } from "drizzle-orm";
+import { and, eq, isNull } from "drizzle-orm";
 
 export async function createFolder(folder: CreateFolderDto) {
   const [newFolder] = await db
@@ -49,8 +49,7 @@ export async function getSubfoldersByParent(
   const queryResult = await db
     .select()
     .from(folders)
-    .where(eq(folders.ownerId, userId))
-    .where(parentIdQuery);
+    .where(and(eq(folders.ownerId, userId), parentIdQuery));
 
   return queryResult;
 }

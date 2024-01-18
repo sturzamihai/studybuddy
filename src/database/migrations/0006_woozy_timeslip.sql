@@ -1,0 +1,2 @@
+ALTER TABLE "document_attachment" ADD COLUMN "attachmentSize" text DEFAULT '0' NOT NULL;--> statement-breakpoint
+ALTER TABLE "document_attachment" ADD COLUMN "createdAt" timestamp DEFAULT '2024-01-17 18:11:26.315' NOT NULL;

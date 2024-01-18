@@ -4,6 +4,7 @@ import "@/styles/globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import AuthProvider from "@/components/AuthProvider";
+import twx from "@/utils/twx";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,7 +20,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body className={twx(inter.className, "bg-stone-100 dark:bg-stone-900 text-gray-950 dark:text-gray-50")}>
         <AuthProvider>
           {children}
         </AuthProvider>

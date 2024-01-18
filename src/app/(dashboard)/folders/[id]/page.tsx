@@ -45,7 +45,7 @@ export default async function FolderPage({
   const breadcrumbs = await getFolderBreadcrumbs(folder.id);
 
   return (
-    <main className="container mx-auto my-5">
+    <main className="container mx-auto pt-32 min-h-[80vh]">
       <Breadcrumbs folders={breadcrumbs ?? [folder]} />
       <div className="flex flex-col gap-6 my-4">
         <FolderGrid user={user} folder={folder} />
