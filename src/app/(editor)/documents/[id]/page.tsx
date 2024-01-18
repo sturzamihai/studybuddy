@@ -6,12 +6,12 @@ import {
   hasDocumentAccess,
 } from "@/services/document.service";
 import TitleEditor from "./components/TitleEditor";
-import ShareDocumentDialog from "@/components/ShareDocument";
+import ShareDocumentDialog from "@/components/ShareDocumentDialog";
 import Link from "next/link";
 import { auth } from "@/configs/next-auth.config";
 import AttachmentSheet from "./components/AttachmentSheet";
 import { Button } from "@/components/ui/Button";
-import { Share } from "lucide-react";
+import { Home, Share } from "lucide-react";
 
 export default async function DocumentPage({
   params,
@@ -35,12 +35,14 @@ export default async function DocumentPage({
   return (
     <main>
       <div className="pb-72 bg-gradient-to-br from-blue-400 to-purple-500 px-2">
-        <div className="max-w-7xl mx-auto pt-10 pb-2 flex justify-between items-center">
+        <div className="container mx-auto pt-10 pb-2 flex justify-between items-center">
           <div>
             <Link
               href={document.folderId ? `/folders/${document.folderId}` : "/"}
+              className="flex items-center gap-2 text-white"
             >
-              <p className="uppercase text-xs tracking-widest text-white">
+              <Home className="w-4 h-4" />
+              <p className="uppercase text-sm tracking-widest font-mono">
                 StudyBuddy
               </p>
             </Link>
@@ -48,7 +50,7 @@ export default async function DocumentPage({
           </div>
           <div className="flex items-center gap-2">
             <AttachmentSheet document={document} attachments={attachments} />
-            <ShareDocumentDialog document={document}>
+            <ShareDocumentDialog user={user} document={document}>
               <Button variant={"secondary"}>
                 <p>Share</p>
                 <Share className="w-4 h-4 ml-2" />

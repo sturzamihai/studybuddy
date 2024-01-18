@@ -4,6 +4,7 @@ import { Document } from "@/database/schema/document";
 import { Crown, X } from "lucide-react";
 import { User } from "next-auth";
 import { Button } from "../ui/Button";
+import { useRouter } from "next/navigation";
 
 export default function MemberList({
   document,
@@ -12,6 +13,7 @@ export default function MemberList({
   document: Document;
   members: Partial<User>[];
 }) {
+  const router = useRouter();
   const removeMember = async (member: Partial<User>) => {
     await fetch(`/api/documents/${document.id}/sharing/${member.id}`, {
       method: "DELETE",
@@ -19,6 +21,8 @@ export default function MemberList({
         "Content-Type": "application/json",
       },
     });
+
+    router.refresh();
   };
 
   return (

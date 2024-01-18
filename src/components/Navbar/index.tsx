@@ -36,11 +36,11 @@ export default async function Navbar() {
   ];
 
   return (
-    <nav className="bg-white dark:bg-black border-b">
+    <nav className="bg-white dark:bg-black border-b dark:border-gray-900 bg-opacity-75 dark:bg-opacity-75 fixed w-full backdrop-blur-sm">
       <div className="container mx-auto flex items-center py-4 justify-between">
         <div className="flex items-center gap-4">
           <Link href="/">
-            <h2 className="uppercase text-sm tracking-widest">Study Buddy</h2>
+            <h2 className="uppercase text-sm tracking-widest font-mono">Study Buddy</h2>
           </Link>
           <TeamSwitcher teams={fullTeams} />
         </div>

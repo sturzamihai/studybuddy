@@ -6,12 +6,14 @@ import {
   UpdateDocumentDto,
   documentAttachments,
   documentSharing,
+  documentTeamSharing,
   documents,
 } from "@/database/schema/document";
 import { folders } from "@/database/schema/folder";
 import { and, eq, isNull } from "drizzle-orm";
 import { getUserById } from "./user.service";
 import notNull from "@/utils/nonNull";
+import { teamMembers } from "@/database/schema/user";
 
 export async function createDocument(
   document: Omit<CreateDocumentDto, "id">
@@ -72,6 +74,29 @@ export async function getSharedDocuments(userId: string): Promise<Document[]> {
   return queryResult;
 }
 
+export async function getSharedDocumentsByTeam(
+  teamId: string
+): Promise<Document[]> {
+  const queryResult = await db
+    .select({
+      id: documents.id,
+      title: documents.title,
+      content: documents.content,
+      createdAt: documents.createdAt,
+      updatedAt: documents.updatedAt,
+      authorId: documents.authorId,
+      folderId: documents.folderId,
+    })
+    .from(documents)
+    .leftJoin(
+      documentTeamSharing,
+      eq(documents.id, documentTeamSharing.documentId)
+    )
+    .where(eq(documentTeamSharing.teamId, teamId));
+
+  return queryResult;
+}
+
 export async function getDocumentsByFolder(
   authorId: string,
   folderId: string | null
@@ -123,6 +148,16 @@ export async function shareDocument(
   });
 }
 
+export async function shareDocumentWithTeam(
+  documentId: string,
+  teamId: string
+): Promise<void> {
+  await db.insert(documentTeamSharing).values({
+    documentId,
+    teamId,
+  });
+}
+
 export async function removeDocumentAccess(
   documentId: string,
   userId: string
@@ -133,6 +168,20 @@ export async function removeDocumentAccess(
       and(
         eq(documentSharing.documentId, documentId),
         eq(documentSharing.userId, userId)
+      )
+    );
+}
+
+export async function removeDocumentAccessFromTeam(
+  documentId: string,
+  teamId: string
+): Promise<void> {
+  await db
+    .delete(documentTeamSharing)
+    .where(
+      and(
+        eq(documentTeamSharing.documentId, documentId),
+        eq(documentTeamSharing.teamId, teamId)
       )
     );
 }
@@ -183,6 +232,33 @@ export async function getDocumentAttachments(documentId: string) {
   return attachments;
 }
 
+export async function hasDocumentAccessByTeam(
+  documentId: string,
+  userId: string
+) {
+  const document = await getDocumentById(documentId);
+
+  if (!document) return false;
+
+  const teamAccess = await db
+    .select()
+    .from(documentTeamSharing)
+    .where(eq(documentTeamSharing.documentId, documentId));
+
+  const teamIds = teamAccess.map((access) => access.teamId);
+
+  const userTeams = await db
+    .select()
+    .from(teamMembers)
+    .where(eq(teamMembers.userId, userId));
+
+  const userTeamIds = userTeams.map((team) => team.teamId);
+
+  const hasAccess = teamIds.some((id) => userTeamIds.includes(id));
+
+  return hasAccess;
+}
+
 export async function hasDocumentAccess(
   documentId: string,
   userId: string
@@ -202,6 +278,30 @@ export async function hasDocumentAccess(
       and(
         eq(documentSharing.documentId, documentId),
         eq(documentSharing.userId, userId)
+      )
+    );
+
+  return (
+    memberAccess.length > 0 ||
+    (await hasDocumentAccessByTeam(documentId, userId))
+  );
+}
+
+export async function teamHasDocumentAccess(
+  documentId: string,
+  teamId: string
+): Promise<boolean> {
+  const document = await getDocumentById(documentId);
+
+  if (!document) return false;
+
+  const memberAccess = await db
+    .select()
+    .from(documentTeamSharing)
+    .where(
+      and(
+        eq(documentTeamSharing.documentId, documentId),
+        eq(documentTeamSharing.teamId, teamId)
       )
     );
 

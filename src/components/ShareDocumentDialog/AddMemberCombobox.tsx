@@ -17,19 +17,21 @@ import {
   FormItem,
   FormMessage,
 } from "../ui/Form";
+import { useRouter } from "next/navigation";
 
 export default function AddMemberCombobox({
   document,
 }: {
   document: Document;
 }) {
+  const router = useRouter();
   const form = useForm({
     defaultValues: {
       invitedEmail: "",
     },
   });
 
-  const onSubmit = form.handleSubmit((data) => {
+  const addMember = form.handleSubmit((data) => {
     fetch(`/api/documents/${document.id}/sharing`, {
       method: "POST",
       headers: {
@@ -44,6 +46,7 @@ export default function AddMemberCombobox({
       }
 
       form.reset();
+      router.refresh();
     });
   });
 
@@ -53,7 +56,7 @@ export default function AddMemberCombobox({
         Add people to collaborate with by inserting their email
       </p>
       <Form {...form}>
-        <form onSubmit={onSubmit} className="flex items-center gap-2">
+        <form onSubmit={addMember} className="flex items-center gap-2">
           <FormField
             control={form.control}
             name="invitedEmail"

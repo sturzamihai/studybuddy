@@ -10,28 +10,27 @@ import {
 } from "@/components/ui/Dialog";
 import { Form, FormField, FormItem, FormMessage } from "@/components/ui/Form";
 import { Input } from "@/components/ui/Input";
-import { Folder } from "@/database/schema/folder";
-import { FolderPlus } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
-export default function CreateFolderButton({
-  folder = null,
+export default function CreateTeamDialog({
+  open = false,
+  onOpenChange,
 }: {
-  folder?: Folder | null;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }) {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(open);
   const router = useRouter();
   const form = useForm({
     defaultValues: {
       name: "",
-      parentId: folder?.id || null,
     },
   });
 
-  const createFolder = form.handleSubmit((data) => {
-    fetch("/api/folders", {
+  const createTeam = form.handleSubmit((data) => {
+    fetch("/api/teams", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -51,19 +50,22 @@ export default function CreateFolderButton({
       });
   });
 
+  useEffect(() => {
+    if(onOpenChange)
+        onOpenChange(isOpen);
+  }, [isOpen, onOpenChange]);
+
+  useEffect(() => {
+    setIsOpen(open);
+  }, [open]);
+
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>
-        <Button variant={"outline"} className="border-dashed">
-          <FolderPlus className="w-5 h-5 mr-2" />
-          New folder
-        </Button>
-      </DialogTrigger>
       <DialogContent>
         <Form {...form}>
-          <form onSubmit={createFolder}>
+          <form onSubmit={createTeam}>
             <DialogHeader>
-              <DialogTitle>Create folder</DialogTitle>
+              <DialogTitle>Create team</DialogTitle>
             </DialogHeader>
 
             <div className="py-4">
@@ -72,7 +74,7 @@ export default function CreateFolderButton({
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <Input {...field} placeholder="Folder name" />
+                    <Input {...field} placeholder="Team name" />
                     <FormMessage />
                   </FormItem>
                 )}

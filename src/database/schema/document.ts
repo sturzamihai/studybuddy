@@ -7,7 +7,7 @@ import {
   numeric,
   integer,
 } from "drizzle-orm/pg-core";
-import { users } from "./user";
+import { teams, users } from "./user";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 import { folders } from "./folder";
@@ -64,6 +64,19 @@ export const documentSharing = pgTable(
     pk: primaryKey(t.documentId, t.userId),
   })
 );
+
+export const documentTeamSharing = pgTable("document_team_sharing", {
+  documentId: text("documentId")
+    .notNull()
+    .references(() => documents.id, {
+      onDelete: "cascade",
+    }),
+  teamId: text("teamId")
+    .notNull()
+    .references(() => teams.id, {
+      onDelete: "cascade",
+    }),
+});
 
 export const documentAttachments = pgTable("document_attachment", {
   id: text("id").notNull().primaryKey(),

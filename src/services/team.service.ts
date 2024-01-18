@@ -64,6 +64,12 @@ export async function addTeamMember(teamId: string, userId: string) {
   });
 }
 
+export async function removeTeamMember(teamId: string, userId: string) {
+  await db
+    .delete(teamMembers)
+    .where(and(eq(teamMembers.teamId, teamId), eq(teamMembers.userId, userId)));
+}
+
 export async function getTeamMembers(teamId: string) {
   const team = await getTeamById(teamId);
 
@@ -72,6 +78,10 @@ export async function getTeamMembers(teamId: string) {
   }
 
   const owner = await getUserById(team.ownerId);
+
+  if (!owner) {
+    return null;
+  }
 
   const membersRelations = await db
     .select()
@@ -84,10 +94,11 @@ export async function getTeamMembers(teamId: string) {
         const user = await getUserById(member.userId);
         return user;
       })
-      .filter((user) => user !== null)
   );
 
-  return [owner, ...members];
+  const nonNullMembers = members.filter(notNull);
+
+  return [owner, ...nonNullMembers];
 }
 
 export async function isTeamMember(teamId: string, userId: string) {
@@ -96,5 +107,10 @@ export async function isTeamMember(teamId: string, userId: string) {
     .from(teamMembers)
     .where(and(eq(teamMembers.teamId, teamId), eq(teamMembers.userId, userId)));
 
-  return memberRelation.length > 0;
+  const ownerRelation = await db
+    .select()
+    .from(teams)
+    .where(and(eq(teams.id, teamId), eq(teams.ownerId, userId)));
+
+  return memberRelation.length > 0 || ownerRelation.length > 0;
 }
